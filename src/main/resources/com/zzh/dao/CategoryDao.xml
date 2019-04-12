@@ -11,8 +11,8 @@
     </resultMap>
     <select id="selectAll" resultMap="c1">
         select t1.*,t2.category_name cname
-        from z_category t1
-                 right JOIN z_category t2
+        from category t1
+                 right JOIN category t2
                             on t1.parents_id = t2.category_id
         where t2.parents_id = 0
     </select>

@@ -18,13 +18,6 @@ public class CategoryController {
     public String selectAll(ModelMap map){
         List<Category> categories = categoryService.selectAll();
         map.addAttribute("categories",categories);
-        for (Category category : categories) {
-            System.out.println(category.getCategoryName());
-            List<Category> categoryList = category.getCategoryList();
-            for (Category category1 : categoryList) {
-                System.out.println(category1.getCategoryName());
-            }
-        }
         return "category";
     }
 }

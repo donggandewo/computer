@@ -14,6 +14,7 @@ public class Product {
     private double oldPrice;
     private double newPrice;
     private Category category;
+
     private Date addTime;
     private Brands brands;
     private String description;

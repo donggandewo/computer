@@ -1,40 +1,16 @@
 package com.zzh.entity;
 
+import lombok.Data;
+import tk.mybatis.mapper.annotation.KeySql;
+
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Data
+@Table(name = "brands")
 public class Brands {
+    @Id
+    @KeySql(useGeneratedKeys = true)
     private int brandsId;
     private String brandsName;
-    private String pic;
-
-    public int getBrandsId() {
-        return brandsId;
-    }
-
-    public void setBrandsId(int brandsId) {
-        this.brandsId = brandsId;
-    }
-
-    public String getBrandsName() {
-        return brandsName;
-    }
-
-    public void setBrandsName(String brandsName) {
-        this.brandsName = brandsName;
-    }
-
-    public String getPic() {
-        return pic;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
-
-    @Override
-    public String toString() {
-        return "Brands{" +
-                "brandsId=" + brandsId +
-                ", brandsName='" + brandsName + '\'' +
-                ", pic='" + pic + '\'' +
-                '}';
-    }
+    private String brandPic;
 }

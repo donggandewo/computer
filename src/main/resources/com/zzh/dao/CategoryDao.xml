@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzh.dao.CategoryDao">
+    <resultMap id="c1" type="com.zzh.entity.Category">
+        <result column="cname" property="categoryName"/>
+        <collection property="categoryList" javaType="java.util.List" ofType="com.zzh.entity.Category">
+            <result column="category_id" property="categoryId"/>
+            <result column="category_name" property="categoryName"/>
+            <result column="parents_id" property="parentsId"/>
+        </collection>
+    </resultMap>
+    <select id="selectAll" resultMap="c1">
+        select t1.*,t2.category_name cname
+        from z_category t1
+                 right JOIN z_category t2
+                            on t1.parents_id = t2.category_id
+        where t2.parents_id = 0
+    </select>
+</mapper>

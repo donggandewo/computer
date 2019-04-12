@@ -4,6 +4,7 @@ import com.zzh.entity.Product;
 import com.zzh.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,7 +18,9 @@ public class ProductController {
     ProductService productService;
     @RequestMapping("selectAll")
     @ResponseBody
-    public List<Product> selectAll(@RequestParam(required = false,defaultValue = "1") int pageIndex, @RequestParam(required = false,defaultValue = "5") int pageSize){
-        return   productService.selectAll(pageIndex,pageSize);
+    public String selectAll(ModelMap map,@RequestParam(required = false,defaultValue = "1") int pageIndex, @RequestParam(required = false,defaultValue = "5") int pageSize){
+        List<Product> list=productService.selectAll(pageIndex,pageSize);
+        map.addAttribute("list",list);
+        return   "index";
     }
 }

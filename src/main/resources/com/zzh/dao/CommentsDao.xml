@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzh.dao.CommentsDao">
+    <resultMap id="product" type="com.zzh.entity.Comment">
+        <result column="comment_id" property="commentId"/>
+        <result column="comments" property="comments"/>
+        <result column="levels" property="levels"/>
+        <result column="comment_date" property="commentTime"/>
+        <association property="product" javaType="com.zzh.entity.Product">
+            <result column="pid" property="productId"/>
+            <result column="pname" property="productName"/>
+        </association>
+        <association property="user" javaType="com.zzh.entity.User">
+            <result column="uname" property="username"/>
+        </association>
+    </resultMap>
+    <select id="selectByProduct" resultMap="product">
+        select t3.*,t4.username uname
+        from (
+                 select t1.*,t2.product_id pid,t2.product_name pname
+                 FROM comment t1
+                          LEFT JOIN product t2
+                                    on t1.product_id = t2.product_id) t3
+                 LEFT JOIN user t4
+                           on t3.user_id = t4.user_id
+        where product_id = #{productId}
+    </select>
+</mapper>

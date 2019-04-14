@@ -1,7 +1,7 @@
 package com.zzh.entity;
 
 import lombok.Data;
-import tk.mybatis.mapper.annotation.KeySql;
+
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "category")
 public class Category {
     @Id
-    @KeySql(useGeneratedKeys = true)
     private int categoryId;
     private String categoryName;
     private int parentsId;

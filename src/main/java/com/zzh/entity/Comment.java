@@ -1,40 +1,20 @@
 package com.zzh.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import tk.mybatis.mapper.annotation.KeySql;
+
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
+
+@Data
 public class Comment {
+    @Id
+    @KeySql(useGeneratedKeys = true)
     private int commentId;
     private String comments;
     private int levels;
-
-    public int getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(int commentId) {
-        this.commentId = commentId;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public int getLevels() {
-        return levels;
-    }
-
-    public void setLevels(int levels) {
-        this.levels = levels;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "commentId=" + commentId +
-                ", comments='" + comments + '\'' +
-                ", levels=" + levels +
-                '}';
-    }
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date commentTime;
 }

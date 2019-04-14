@@ -1,5 +1,6 @@
 package com.zzh.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ public class Product {
     private double oldPrice;
     private double newPrice;
     private Category category;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
     private Brands brands;
     private String description;

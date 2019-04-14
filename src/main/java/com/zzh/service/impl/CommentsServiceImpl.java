@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Service("commentsService")
 @Transactional
 public class CommentsServiceImpl implements CommentsService {
     @Autowired
     private CommentsDao commentsDao;
+
     @Override
     public List<Comment> selectByProduct(int productId) {
 

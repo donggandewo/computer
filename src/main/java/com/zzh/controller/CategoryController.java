@@ -18,7 +18,6 @@ public class CategoryController {
     public String selectAll(ModelMap map){
         List<Category> categories = categoryService.selectAll();
         map.addAttribute("categories",categories);
-        System.out.println("fuck");
         return "category";
     }
 }

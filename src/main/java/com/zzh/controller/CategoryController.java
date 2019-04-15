@@ -1,4 +1,4 @@
-package com.zzh.Controller;
+package com.zzh.controller;
 
 import com.zzh.entity.Category;
 import com.zzh.service.CategoryService;

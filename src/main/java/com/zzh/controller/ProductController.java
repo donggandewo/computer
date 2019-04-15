@@ -1,4 +1,4 @@
-package com.zzh.Controller;
+package com.zzh.controller;
 
 import com.zzh.entity.Product;
 import com.zzh.service.ProductService;
@@ -21,6 +21,6 @@ public class ProductController {
     public String selectAll(ModelMap map,@RequestParam(required = false,defaultValue = "1") int pageIndex, @RequestParam(required = false,defaultValue = "5") int pageSize){
         List<Product> list=productService.selectAll(pageIndex,pageSize);
         map.addAttribute("list",list);
-        return   "index";
+        return "product";
     }
 }

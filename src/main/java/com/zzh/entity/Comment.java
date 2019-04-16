@@ -2,6 +2,7 @@ package com.zzh.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import javax.persistence.Transient;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 @Table(name = "comment")
 public class Comment {
     @Id

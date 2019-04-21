@@ -17,4 +17,4 @@ spring:
       suffix: .jsp
 mybatis:
   type-aliases-package: com.zzh.entity
-  mapper-locations: classpath:com/zzh/dao*Mapper.xml
+  mapper-locations: classpath:com/zzh/dao/*.xml

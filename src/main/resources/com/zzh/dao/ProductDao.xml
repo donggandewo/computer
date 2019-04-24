@@ -11,7 +11,10 @@
         <result property="recommend" column="recommend"/>
         <result property="brands.brandsId" column="brands_id"/>
         <result property="details.detailsId" column="details_id"/>
-        <result property="category.categoryId" column="category_id"/>
+        <association property="category" javaType="com.zzh.entity.Category">
+            <result property="categoryId" column="cid"/>
+            <result property="categoryName" column="cname"/>
+        </association>
         <association property="brands" javaType="com.zzh.entity.Brands">
             <result property="brandsId" column="bid"/>
             <result property="brandsName" column="bname"/>
@@ -23,10 +26,13 @@
                  LEFT JOIN category t2
                            on t1.category_id = t2.category_id
         where t2.category_name = #{category.categoryName}
+        order by t1.recommend desc
     </select>
     <select id="selectProduct" resultMap="product">
-        select *
-        from product
+        select t1.*,t2.category_id cid,t2.category_name cname
+        from product t1
+                 INNER JOIN category t2
+                            on t1.category_id = t2.category_id
         where product_id = #{productId}
     </select>
 </mapper>

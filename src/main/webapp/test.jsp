@@ -21,7 +21,7 @@
     </div>
     <br>
     <div>
-        <a href="">
+        <a href="${pageContext.request.contextPath}/product/selectByCondition?category.categoryName=显卡">
             <button>请选择显卡</button>
         </a>
     </div>

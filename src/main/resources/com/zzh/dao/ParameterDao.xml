@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzh.dao.ParameterDao">
+    <resultMap id="parameter" type="com.zzh.entity.Parameter">
+        <result property="parameterId" column="parameter_id"/>
+        <result property="parameterVal" column="parameter_val"/>
+        <association property="details" javaType="com.zzh.entity.Details">
+            <result property="detailsId" column="did"/>
+            <result property="productId" column="pid"/>
+        </association>
+    </resultMap>
+    <select id="selectDetails" resultMap="parameter">
+        select *
+        from product t3
+                 inner JOIN
+                 (select t1.*,t2.details_id did,t2.product_id pid
+                  from parameter t1
+                           LEFT JOIN details t2
+                                     ON t1.details_id = t2.details_id
+                  where t2.details_id = 1
+                    and parameter_name like #{condition}) t4
+                 on t3.product_id = t4.pid
+        order by t3.recommend desc
+    </select>
+    <select id="selectByVal" resultMap="parameter">
+        select t1.*,t2.details_id did,t2.product_id pid
+        from parameter t1
+                 LEFT JOIN details t2
+                           ON t1.details_id = t2.details_id
+        where parameter_val = #{val}
+    </select>
+</mapper>

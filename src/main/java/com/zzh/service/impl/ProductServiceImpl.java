@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service("productService")
 @Transactional
-public class ProductDaoImpl implements ProductService {
+public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDao productDao;
     @Override
@@ -21,5 +21,16 @@ public class ProductDaoImpl implements ProductService {
         PageHelper.startPage(pageIndex,pageSize);
         PageInfo<Product> pageInfo=new PageInfo<>(productDao.selectAll());
         return pageInfo.getList();
+    }
+
+    @Override
+    public List<Product> selectByCondition(Product product) {
+        return productDao.selectByCondition(product);
+    }
+
+    @Override
+    public Product selectOne(int productId) {
+        Product product = productDao.selectProduct(productId);
+        return product;
     }
 }

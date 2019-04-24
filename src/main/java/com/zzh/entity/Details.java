@@ -14,5 +14,5 @@ public class Details {
     private int detailsId;
     private int categoryId;
     private String desc;
-    private Product productId;
+    private int productId;
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzh.dao.ProductDao">
+    <resultMap id="product" type="com.zzh.entity.Product">
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="newPrice" column="new_price"/>
+        <result property="oldPrice" column="old_price"/>
+        <result property="addTime" column="add_time"/>
+        <result property="description" column="description"/>
+        <result property="recommend" column="recommend"/>
+        <association property="category" javaType="com.zzh.entity.Category">
+            <result property="categoryId" column="cid"/>
+            <result property="categoryName" column="cname"/>
+            <result property="parentsId" column="pid"/>
+        </association>
+    </resultMap>
+    <select id="selectByCondition" resultMap="product">
+        SELECT t1.*,t2.category_id cid,t2.category_name cname,t2.parents_id pid
+        from product t1
+                 LEFT JOIN category t2
+                           on t1.categegory_id = t2.category_id
+        where t2.category_name = #{category.categoryName}
+    </select>
+    <select id="selectProduct" resultMap="product">
+        SELECT t1.*,t2.category_id cid,t2.category_name cname,t2.parents_id pid
+        from product t1
+                 LEFT JOIN category t2
+                           on t1.categegory_id = t2.category_id
+        where t1.product_id = #{productId}
+    </select>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzh.dao.DetailsDao">
+    <resultMap id="details" type="com.zzh.entity.Details">
+        <result property="detailsId" column="details_id"/>
+        <result property="productId" column="product_id"/>
+    </resultMap>
+    <select id="selectByProduct" resultType="com.zzh.entity.Details">
+        select *
+        from details
+        where product_id = #{productId}
+    </select>
+</mapper>

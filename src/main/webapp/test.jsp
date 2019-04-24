@@ -15,7 +15,7 @@
     </div>
     <br>
     <div>
-        <a href="">
+        <a href="${pageContext.request.contextPath}/product/selectByCondition?category.categoryName=主板">
             <button>请选择主板</button>
         </a>
     </div>

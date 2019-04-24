@@ -6,27 +6,58 @@
         <result property="parameterVal" column="parameter_val"/>
         <association property="details" javaType="com.zzh.entity.Details">
             <result property="detailsId" column="did"/>
-            <result property="productId" column="pid"/>
+            <result property="categoryId" column="cid"/>
+            <result property="product.productId" column="pid"/>
+            <result property="product.productName" column="product_name"/>
+            <result property="product.newPrice" column="new_price"/>
+            <result property="product.oldPrice" column="old_price"/>
+            <result property="product.addTime" column="add_time"/>
+            <result property="product.description" column="description"/>
+            <result property="product.recommend" column="recommend"/>
+            <result property="product.brands.brandsId" column="brands_id"/>
         </association>
     </resultMap>
     <select id="selectDetails" resultMap="parameter">
         select *
         from product t3
                  inner JOIN
-                 (select t1.*,t2.details_id did,t2.product_id pid
+                 (select t1.*,t2.details_id did,t2.product_id pid,t2.category_id cid
                   from parameter t1
                            LEFT JOIN details t2
                                      ON t1.details_id = t2.details_id
-                  where t2.details_id = 1
+                  where t2.details_id = #{details}
                     and parameter_name like #{condition}) t4
                  on t3.product_id = t4.pid
-        order by t3.recommend desc
     </select>
     <select id="selectByVal" resultMap="parameter">
-        select t1.*,t2.details_id did,t2.product_id pid
-        from parameter t1
-                 LEFT JOIN details t2
-                           ON t1.details_id = t2.details_id
+        select *
+        from product t3
+                 INNER JOIN
+                 (select t1.*,t2.details_id did,t2.product_id pid,t2.category_id cid
+                  from parameter t1
+                           LEFT JOIN details t2
+                                     on t1.details_id = t2.details_id) t4
+                 on t3.product_id = t4.pid
         where parameter_val = #{val}
+        order by recommend desc
+    </select>
+    <select id="selectByDDR" resultMap="parameter">
+        SELECT
+            *
+        FROM
+            product t3
+                INNER JOIN (
+                SELECT
+                    t1.*,
+                    t2.details_id  did,
+                    t2.product_id  pid,
+                    t2.category_id cid
+                FROM
+                    parameter t1
+                        LEFT JOIN details t2 ON t1.details_id = t2.details_id
+            ) t4 ON t3.product_id = t4.pid
+        WHERE
+            parameter_int BETWEEN #{minddr} and #{maxddr}
+        order by recommend desc
     </select>
 </mapper>

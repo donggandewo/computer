@@ -3,9 +3,13 @@
 <mapper namespace="com.zzh.dao.DetailsDao">
     <resultMap id="details" type="com.zzh.entity.Details">
         <result property="detailsId" column="details_id"/>
-        <result property="productId" column="product_id"/>
+        <result property="categoryId" column="category_id"/>
+        <association property="product" javaType="com.zzh.entity.Product">
+            <result property="productId" column="pid"/>
+            <result property="productName" column="product_name"/>
+        </association>
     </resultMap>
-    <select id="selectByProduct" resultType="com.zzh.entity.Details">
+    <select id="selectByProduct" resultMap="details">
         select *
         from details
         where product_id = #{productId}

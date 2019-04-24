@@ -26,6 +26,6 @@ public class Product {
     private Brands brands;
     private String description;
     private int recommend;
-    private List<Details> details;
+    private Details details;
 
 }

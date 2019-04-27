@@ -12,4 +12,6 @@ public interface ParameterDao {
 
     public List<Parameter> selectByDDR(@Param("minddr") int minddr, @Param("maxddr") int maxddr);
     public List<Parameter> selectByVal(String val);
+
+    public Parameter selectPower(int productId);
 }

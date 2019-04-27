@@ -12,4 +12,6 @@ public interface ParameterService {
     public List<Parameter> selectByVal(String val);
 
     public List<Parameter> selectByDDR(int minddr, int maxddr);
+
+    public Parameter selectPower(int productId);
 }

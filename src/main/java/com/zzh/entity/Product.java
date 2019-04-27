@@ -16,7 +16,7 @@ import java.util.List;
 public class Product {
     @Id
     @KeySql(useGeneratedKeys = true)
-    private int productId;
+    private Integer productId;
     private String productName;
     private double oldPrice;
     private double newPrice;

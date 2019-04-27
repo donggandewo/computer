@@ -15,4 +15,5 @@ public class Parameter {
     private Details details;
     private String parameterName;
     private String parameterVal; //参数信息
+    private Integer parameterInt;
 }

@@ -1,9 +1,7 @@
 package com.zzh.controller;
 
-import com.zzh.entity.Category;
-import com.zzh.entity.Details;
-import com.zzh.entity.Parameter;
-import com.zzh.entity.Product;
+import com.alibaba.fastjson.JSONObject;
+import com.zzh.entity.*;
 import com.zzh.service.DetailsService;
 import com.zzh.service.ParameterService;
 import com.zzh.service.ProductService;
@@ -13,17 +11,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import redis.clients.jedis.Jedis;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.Condition;
+import java.util.*;
 
 @Controller
 @RequestMapping("product")
 public class ProductController {
+    private Jedis jedis = new Jedis("localhost");
     @Autowired
     DetailsService detailsService;
     @Autowired
@@ -45,16 +41,15 @@ public class ProductController {
         return "liebiao";
     }
 
-    @ResponseBody
+    //@ResponseBody
     @RequestMapping("selectByDetails")
-    public Object selectByDetails(int productId, ModelMap map, String condition) {
+    public String selectByDetails(Integer productId, ModelMap map, String condition, @RequestParam(required = false, defaultValue = "1") Integer userId) {
         List<Product> zhubanList = new ArrayList<>();
         List<Product> cpuList = new ArrayList<>();
         List<Product> neicunList = new ArrayList<>();
         Map hashmap = new HashMap();
         Product product = productService.selectOne(productId);//从前端拿到商品id，通过id拿到商品详情
         Category category = product.getCategory();//通过商品拿到种类
-        System.out.println(product);
         String val = null;
         //显卡获取
         List<Product> xiankaList = new ArrayList<>();
@@ -176,10 +171,30 @@ public class ProductController {
             neicunList.add(productService.selectOne(8));
 
         }
-        hashmap.put("xianka", xiankaList);
+        Integer power = 0;
+        if (xiankaList.size() > 0) {
+            map.addAttribute("xianka", xiankaList.get(0));
+            Parameter parameters = parameterService.selectPower(xiankaList.get(0).getProductId());
+            power += parameters.getParameterInt();
+        }
+        if (cpuList.size() > 0) {
+            map.addAttribute("cpu", cpuList.get(0));
+            Parameter parameters = parameterService.selectPower(cpuList.get(0).getProductId());
+            power += parameters.getParameterInt();
+        }
+        if (zhubanList.size() > 0) {
+            map.addAttribute("zhuban", zhubanList.get(0));
+        }
+        if (neicunList.size() > 0) {
+            map.addAttribute("neicun", neicunList.get(0));
+        }
+        Parameter parameters = parameterService.selectPower(productId);
+        power = power + 150 + parameters.getParameterInt();
+        map.addAttribute("power", power.toString());
+        /*hashmap.put("xianka", xiankaList);
         hashmap.put("cpu", cpuList);
         hashmap.put("zhuban", zhubanList);
-        hashmap.put("necun", neicunList);
-        return hashmap;
+        hashmap.put("necun", neicunList);*/
+        return "commend2";
     }
 }

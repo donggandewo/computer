@@ -11,8 +11,8 @@ import javax.persistence.Id;
 public class Details {
     @Id
     @KeySql(useGeneratedKeys = true)
-    private int detailsId;
-    private int categoryId;
+    private Integer detailsId;
+    private Integer categoryId;
     private String desc;
     private Product product;
 }

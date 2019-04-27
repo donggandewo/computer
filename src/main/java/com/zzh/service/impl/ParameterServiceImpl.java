@@ -29,4 +29,10 @@ public class ParameterServiceImpl implements ParameterService {
     public List<Parameter> selectByDDR(int minddr, int maxddr) {
         return parameterDao.selectByDDR(minddr, maxddr);
     }
+
+    @Override
+    public Parameter selectPower(int productId) {
+        Parameter parameter = parameterDao.selectPower(productId);
+        return parameter;
+    }
 }

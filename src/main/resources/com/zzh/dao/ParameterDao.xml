@@ -4,6 +4,7 @@
     <resultMap id="parameter" type="com.zzh.entity.Parameter">
         <result property="parameterId" column="parameter_id"/>
         <result property="parameterVal" column="parameter_val"/>
+        <result property="parameterInt" column="parameter_int"/>
         <association property="details" javaType="com.zzh.entity.Details">
             <result property="detailsId" column="did"/>
             <result property="categoryId" column="cid"/>
@@ -59,5 +60,17 @@
         WHERE
             parameter_int BETWEEN #{minddr} and #{maxddr}
         order by recommend desc
+    </select>
+    <select id="selectPower" resultMap="parameter">
+        select *
+        from product t3
+                 INNER JOIN
+                 (select t1.*,t2.details_id did,t2.product_id pid,t2.category_id cid
+                  from parameter t1
+                           LEFT JOIN details t2
+                                     on t1.details_id = t2.details_id) t4
+                 on t3.product_id = t4.pid
+        where parameter_name = '功耗'
+          and product_id = #{productId}
     </select>
 </mapper>

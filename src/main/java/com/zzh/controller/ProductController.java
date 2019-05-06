@@ -1,6 +1,5 @@
 package com.zzh.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.zzh.entity.*;
 import com.zzh.service.DetailsService;
 import com.zzh.service.ParameterService;
@@ -68,18 +67,15 @@ public class ProductController {
             if (val == null) {
                 val = parameter.getParameterVal();
             }
-            List<Parameter> parameters = parameterService.selectByVal(val);//拿到所有同样接口的参数
+            List<Parameter> parameters = parameterService.selectByVal(parameter, null, null);//拿到所有同样接口的参数
             for (Parameter parameter1 : parameters) {
-                //如果传过来的商品id与查出来的所有符合条件的商品id不同(需要相同接口但是不同类别的产品)
-                if (parameter1.getDetails().getCategoryId() != categoryId) {
-                    //31是主板类别编号
-                    if (parameter1.getDetails().getCategoryId() == 31) {
-                        zhubanList.add(parameter1.getDetails().getProduct());
-                    }
-                    //cpu编号33
-                    else if (parameter1.getDetails().getCategoryId() == 33) {
-                        cpuList.add(parameter1.getDetails().getProduct());
-                    }
+                //31是主板类别编号
+                if (parameter1.getDetails().getCategoryId() == 31) {
+                    zhubanList.add(parameter1.getDetails().getProduct());
+                }
+                //cpu编号33
+                else if (parameter1.getDetails().getCategoryId() == 33) {
+                    cpuList.add(parameter1.getDetails().getProduct());
                 }
             }
         /*for (Parameter parameter1 : parameters) {
@@ -169,32 +165,186 @@ public class ProductController {
             cpuList.add(productService.selectOne(5));
             zhubanList.add(productService.selectOne(6));
             neicunList.add(productService.selectOne(8));
-
         }
         Integer power = 0;
+        //计算功率开始：
+        // 如果显卡集合有数据
         if (xiankaList.size() > 0) {
-            map.addAttribute("xianka", xiankaList.get(0));
-            Parameter parameters = parameterService.selectPower(xiankaList.get(0).getProductId());
+            Parameter parameters = setCondition(xiankaList.get(0), "功耗");
             power += parameters.getParameterInt();
+        } else {
+            xiankaList.add(product);
         }
+        map.addAttribute("xianka", xiankaList.get(0));
+        //如果CPU集合有数据
         if (cpuList.size() > 0) {
-            map.addAttribute("cpu", cpuList.get(0));
-            Parameter parameters = parameterService.selectPower(cpuList.get(0).getProductId());
+            Parameter parameters = setCondition(cpuList.get(0), "功耗");
             power += parameters.getParameterInt();
+        } else {
+            cpuList.add(product);
         }
-        if (zhubanList.size() > 0) {
-            map.addAttribute("zhuban", zhubanList.get(0));
+        map.addAttribute("cpu", cpuList.get(0));
+        if (zhubanList.size() == 0) {
+            zhubanList.add(product);
         }
-        if (neicunList.size() > 0) {
-            map.addAttribute("neicun", neicunList.get(0));
+        map.addAttribute("zhuban", zhubanList.get(0));
+       /* if (neicunList.size()==0) {
+            neicunList.add(product);
+        }*/
+        map.addAttribute("neicun", neicunList.get(0));
+        Details details = new Details();
+        details.setProduct(product);
+        Parameter parameter = new Parameter();
+        parameter.setDetails(details);
+        parameter.setParameterName("功耗");
+        Parameter parameters = parameterService.selectPower(parameter);
+        if (parameters == null) {
+            power = power + 200;
+        } else {
+            power = power + 200 + parameters.getParameterInt();
         }
-        Parameter parameters = parameterService.selectPower(productId);
-        power = power + 150 + parameters.getParameterInt();
+        Details dianyuan = new Details();
+        dianyuan.setCategoryId(35);
+        Parameter dianyuanP = new Parameter();
+        dianyuanP.setDetails(dianyuan);
+        List<Parameter> dianyuanList = parameterService.selectByVal(dianyuanP, power - 99, power);
+        map.addAttribute("dianyuan", dianyuanList.get(0).getDetails().getProduct());
         map.addAttribute("power", power.toString());
         /*hashmap.put("xianka", xiankaList);
         hashmap.put("cpu", cpuList);
         hashmap.put("zhuban", zhubanList);
         hashmap.put("necun", neicunList);*/
         return "commend2";
+    }
+
+    public Parameter setCondition(Product p, String parameterName) {
+        Parameter condition = new Parameter();
+        condition.setParameterName(parameterName);
+        Details condition2 = new Details();
+        Product product = new Product();
+        product.setProductId(p.getProductId());
+        condition2.setProduct(product);
+        condition.setDetails(condition2);
+        Parameter parameters = parameterService.selectPower(condition);
+        return parameters;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("selectByPerformance")
+    public Map selectByPerformance(double performance, Integer demand) {
+        Map map = new HashMap();
+        double a = 0.0;
+        double b = 0.0;
+        double xiankaP = 0;
+        double cpuP = 0;
+        //内存最高价
+        double neicunMoney = performance * 60;
+        if (neicunMoney < 300) {
+            neicunMoney = 300;
+        }
+        if (demand == 1) {
+            a = 0.25;
+            b = 0.75;
+        } else if (demand == 2) {
+            a = 0.38;
+            b = 0.62;
+        } else if (demand == 3) {
+            a = 0.59;
+            b = 0.41;
+        } else if (demand == 4) {
+            a = 0.67;
+            b = 0.33;
+        }
+        xiankaP = a * performance;
+        cpuP = b * performance;
+        Product xianka = new Product();
+        Category xiankaC = new Category();
+        xiankaC.setCategoryName("显卡");
+        xianka.setCategory(xiankaC);
+        xianka.setPerformance(xiankaP);
+        List<Product> xiankaList = productService.selectByCondition(xianka);
+        Product cpu = new Product();
+        Category cpuC = new Category();
+        cpuC.setCategoryName("cpu");
+        cpu.setCategory(cpuC);
+        cpu.setPerformance(cpuP);
+        List<Product> cpuList = productService.selectByCondition(cpu);
+        List<Product> zhubanList = new ArrayList<>();
+        //方案集合
+        List<Map> computerList = new ArrayList<>();
+        //拿取5个推荐值最高的,符合要求的cpu
+        int count = cpuList.size();
+        if (count > 5) {
+            count = 5;
+        }
+        for (int i = 0; i < count; i++) {
+            //定义功率初值
+            int power = 200;
+            //拿出一个CPU
+            Product cpuX = cpuList.get(i);
+            //获取这个cpu的接口信息
+            Parameter parameter = parameterService.selectDetails(cpuX.getDetails().getDetailsId(), "接口");
+            //拿到所有同接口的商品
+            Parameter sort = new Parameter();
+            sort.setParameterVal(parameter.getParameterVal());
+            List<Parameter> parameters = parameterService.selectByVal(sort, null, null);
+            for (Parameter zhuban : parameters) {
+                if (zhuban.getDetails().getCategoryId() == 31) {
+                    //获取匹配该接口的所有主板
+                    zhubanList.add(zhuban.getDetails().getProduct());
+                }
+            }
+            //生成一个方案
+            Map computer = new HashMap();
+            //方案中存入一个cpu
+            computer.put("cpu", cpuX);
+            //获取cpu功率和价格
+            double cpuPrice = cpuX.getNewPrice();
+            Parameter cpupower = setCondition(cpuX, "功耗");
+            power += cpupower.getParameterInt();
+            //方案中存入荐值最高的主板，和其价格
+            computer.put("zhuban", zhubanList.get(0));
+            Double zhubanPrice = zhubanList.get(0).getNewPrice();
+            //方案中存储一个显卡(每次存的都不一样)
+            double xiankaPrice = 0;
+            Parameter xiankapower = null;
+            if (xiankaList.size() != 0) {
+                computer.put("xianka", xiankaList.get(0));
+                xiankaPrice = xiankaList.get(0).getNewPrice();
+                xiankapower = setCondition(xiankaList.get(0), "功耗");
+                power += xiankapower.getParameterInt();
+            }
+            //获取显卡的功耗和价格
+            //获取内存和其价格
+            Product neicunCondition = new Product();
+            Category neicunc = new Category();
+            neicunc.setCategoryName("内存");
+            neicunCondition.setCategory(neicunc);
+            neicunCondition.setNewPrice(neicunMoney);
+            List<Product> neicunList = productService.selectByCondition(neicunCondition);
+            computer.put("neicun", neicunList.get(0));
+            double neicunPrice = neicunList.get(0).getNewPrice();
+            //获取硬盘，和其价格
+            double yingpanPrice = 300;
+            //获取电源,和其价格
+            Details dianyuan = new Details();
+            dianyuan.setCategoryId(35);
+            Parameter dianyuanP = new Parameter();
+            dianyuanP.setDetails(dianyuan);
+            if (power < 400) {
+                power = 400;
+            }
+            List<Parameter> dianyuanList = parameterService.selectByVal(dianyuanP, power - 100, power);
+            computer.put("dianyuan", dianyuanList.get(0).getDetails().getProduct());
+            double dianyuanPrice = dianyuanList.get(0).getDetails().getProduct().getNewPrice();
+            //总价：
+            double total = cpuPrice + xiankaPrice + zhubanPrice + neicunPrice + dianyuanPrice + yingpanPrice;
+            computer.put("totalPrice", total);
+            computerList.add(computer);
+        }
+        map.put("computerList", computerList);
+        System.out.println(map);
+        return map;
     }
 }

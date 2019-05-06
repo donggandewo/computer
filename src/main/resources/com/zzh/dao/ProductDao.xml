@@ -11,6 +11,7 @@
         <result property="recommend" column="recommend"/>
         <result property="brands.brandsId" column="brands_id"/>
         <result property="details.detailsId" column="details_id"/>
+        <result property="performance" column="performance"/>
         <association property="category" javaType="com.zzh.entity.Category">
             <result property="categoryId" column="cid"/>
             <result property="categoryName" column="cname"/>
@@ -23,9 +24,18 @@
     <select id="selectByCondition" resultMap="product">
         SELECT t1.*,t2.category_id cid,t2.category_name cname,t2.parents_id pid
         from product t1
-                 LEFT JOIN category t2
-                           on t1.category_id = t2.category_id
-        where t2.category_name = #{category.categoryName}
+        LEFT JOIN category t2
+        on t1.category_id = t2.category_id
+        where 1=1
+        <if test="category!=null">
+            and t2.category_name = #{category.categoryName}
+        </if>
+        <if test="performance!=null">
+            and t1.performance &lt; #{performance}
+        </if>
+        <if test="newPrice!=null">
+            and t1.new_price &lt;#{newPrice}
+        </if>
         order by t1.recommend desc
     </select>
     <select id="selectProduct" resultMap="product">

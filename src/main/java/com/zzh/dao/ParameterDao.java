@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface ParameterDao {
     public Parameter selectDetails(@Param("details") int details, @Param("condition") String condition);
-
     public List<Parameter> selectByDDR(@Param("minddr") int minddr, @Param("maxddr") int maxddr);
-    public List<Parameter> selectByVal(String val);
 
-    public Parameter selectPower(int productId);
+    public List<Parameter> selectByVal(@Param("parameter") Parameter parameter, @Param("min") Integer min, @Param("max") Integer max);
+
+    public Parameter selectPower(Parameter parameter);
 }

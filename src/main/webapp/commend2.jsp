@@ -4,8 +4,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>用户注册</title>
-    <link href="./css/login.css" rel="stylesheet" type="text/css">
+    <title>用户推荐</title>
+    <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet" type="text/css">
     <script src="http://cdn-hangzhou.goeasy.io/goeasy.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
@@ -57,6 +57,7 @@
             </div>
             <div>${requestScope.dianyuan.productName}</div>
             <div>${requestScope.dianyuan.newPrice}</div>
+
             <div class="username">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源:&nbsp;&nbsp;<input
                     class="shurukuang" name="tel"
                     value="------" readonly

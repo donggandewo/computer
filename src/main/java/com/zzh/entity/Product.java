@@ -18,8 +18,8 @@ public class Product {
     @KeySql(useGeneratedKeys = true)
     private Integer productId;
     private String productName;
-    private double oldPrice;
-    private double newPrice;
+    private Double oldPrice;
+    private Double newPrice;
     private Category category;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
@@ -27,5 +27,5 @@ public class Product {
     private String description;
     private int recommend;
     private Details details;
-
+    private Double performance;
 }

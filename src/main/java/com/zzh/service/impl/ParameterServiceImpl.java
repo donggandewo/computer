@@ -20,8 +20,8 @@ public class ParameterServiceImpl implements ParameterService {
     }
 
     @Override
-    public List<Parameter> selectByVal(String val) {
-        List<Parameter> parameters = parameterDao.selectByVal(val);
+    public List<Parameter> selectByVal(Parameter parameter, Integer min, Integer max) {
+        List<Parameter> parameters = parameterDao.selectByVal(parameter, min, max);
         return parameters;
     }
 
@@ -31,8 +31,8 @@ public class ParameterServiceImpl implements ParameterService {
     }
 
     @Override
-    public Parameter selectPower(int productId) {
-        Parameter parameter = parameterDao.selectPower(productId);
-        return parameter;
+    public Parameter selectPower(Parameter parameter) {
+        Parameter parameters = parameterDao.selectPower(parameter);
+        return parameters;
     }
 }

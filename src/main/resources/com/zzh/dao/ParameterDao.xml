@@ -33,13 +33,22 @@
     <select id="selectByVal" resultMap="parameter">
         select *
         from product t3
-                 INNER JOIN
-                 (select t1.*,t2.details_id did,t2.product_id pid,t2.category_id cid
-                  from parameter t1
-                           LEFT JOIN details t2
-                                     on t1.details_id = t2.details_id) t4
-                 on t3.product_id = t4.pid
-        where parameter_val = #{val}
+        INNER JOIN
+        (select t1.*,t2.details_id did,t2.product_id pid,t2.category_id cid
+        from parameter t1
+        LEFT JOIN details t2
+        on t1.details_id = t2.details_id) t4
+        on t3.product_id = t4.pid
+        where 1=1
+        <if test="parameter.parameterVal!=null">
+            and parameter_val = #{parameter.parameterVal}
+        </if>
+        <if test="parameter.details!=null">
+            and cid=#{parameter.details.categoryId}
+        </if>
+        <if test="min!=null and max!=null">
+            and parameter_int BETWEEN #{min} and #{max}
+        </if>
         order by recommend desc
     </select>
     <select id="selectByDDR" resultMap="parameter">
@@ -64,13 +73,19 @@
     <select id="selectPower" resultMap="parameter">
         select *
         from product t3
-                 INNER JOIN
-                 (select t1.*,t2.details_id did,t2.product_id pid,t2.category_id cid
-                  from parameter t1
-                           LEFT JOIN details t2
-                                     on t1.details_id = t2.details_id) t4
-                 on t3.product_id = t4.pid
-        where parameter_name = '功耗'
-          and product_id = #{productId}
+        INNER JOIN
+        (select t1.*,t2.details_id did,t2.product_id pid,t2.category_id cid
+        from parameter t1
+        LEFT JOIN details t2
+        on t1.details_id = t2.details_id) t4
+        on t3.product_id = t4.pid
+        where 1=1
+        <if test="parameterName!=null">
+            and parameter_name = #{parameterName}
+        </if>
+        <if test="details.product.productId!=null">
+            and product_id = #{details.product.productId}
+        </if>
+
     </select>
 </mapper>

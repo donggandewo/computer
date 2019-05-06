@@ -9,9 +9,10 @@ import java.util.List;
 
 public interface ParameterService {
     public Parameter selectDetails(int details, String condition);
-    public List<Parameter> selectByVal(String val);
+
+    public List<Parameter> selectByVal(Parameter parameter, Integer min, Integer max);
 
     public List<Parameter> selectByDDR(int minddr, int maxddr);
 
-    public Parameter selectPower(int productId);
+    public Parameter selectPower(Parameter parameter);
 }

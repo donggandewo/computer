@@ -9,5 +9,10 @@ public interface ProductService {
 
     public List<Product> selectByCondition(Product product);
 
+    public List<Product> selectByCondition(Product product, Double max, Double min);
     public Product selectOne(int productId);
+
+    public void insert(Product product);
+
+    public void update(Product product);
 }

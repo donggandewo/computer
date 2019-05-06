@@ -1,14 +1,15 @@
 package com.zzh.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.alibaba.fastjson.annotation.JSONField;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import tk.mybatis.mapper.annotation.KeySql;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
-import java.util.List;
 
 @Table(name = "product")
 @Data
@@ -21,11 +22,15 @@ public class Product {
     private Double oldPrice;
     private Double newPrice;
     private Category category;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date addTime;
     private Brands brands;
     private String description;
-    private int recommend;
+    private Double recommend;
     private Details details;
     private Double performance;
+    private Double media;
+    private Integer mediaNum;
+    private Integer sales;
 }

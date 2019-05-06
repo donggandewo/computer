@@ -16,6 +16,10 @@
             <result property="product.description" column="description"/>
             <result property="product.recommend" column="recommend"/>
             <result property="product.brands.brandsId" column="brands_id"/>
+            <result property="product.performance" column="performance"/>
+            <result property="product.media" column="media"/>
+            <result property="product.mediaNum" column="media_num"/>
+            <result property="product.sales" column="sales"/>
         </association>
     </resultMap>
     <select id="selectDetails" resultMap="parameter">

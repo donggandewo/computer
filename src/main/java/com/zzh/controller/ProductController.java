@@ -4,6 +4,7 @@ import com.zzh.entity.*;
 import com.zzh.service.DetailsService;
 import com.zzh.service.ParameterService;
 import com.zzh.service.ProductService;
+import com.zzh.util.Recommend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.Jedis;
 
 
+import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -42,7 +46,7 @@ public class ProductController {
 
     //@ResponseBody
     @RequestMapping("selectByDetails")
-    public String selectByDetails(Integer productId, ModelMap map, String condition, @RequestParam(required = false, defaultValue = "1") Integer userId) {
+    public String selectByDetails(Integer productId, ModelMap map, String condition, @RequestParam(required = false, defaultValue = "1") Integer userId, HttpSession session) {
         List<Product> zhubanList = new ArrayList<>();
         List<Product> cpuList = new ArrayList<>();
         List<Product> neicunList = new ArrayList<>();
@@ -207,9 +211,22 @@ public class ProductController {
         dianyuan.setCategoryId(35);
         Parameter dianyuanP = new Parameter();
         dianyuanP.setDetails(dianyuan);
-        List<Parameter> dianyuanList = parameterService.selectByVal(dianyuanP, power - 99, power);
+        List<Parameter> dianyuanList = parameterService.selectByVal(dianyuanP, power - 99, power + 50);
         map.addAttribute("dianyuan", dianyuanList.get(0).getDetails().getProduct());
         map.addAttribute("power", power.toString());
+        Product yingpan = new Product();
+        yingpan.setProductName("256GB固态硬盘");
+        yingpan.setOldPrice(320.0);
+        yingpan.setNewPrice(300.0);
+        map.addAttribute("yingpan", yingpan);
+        map.addAttribute("totalPrice", cpuList.get(0).getNewPrice() + zhubanList.get(0).getNewPrice() + xiankaList.get(0).getNewPrice() + neicunList.get(0).getNewPrice() + dianyuanList.get(0).getDetails().getProduct().getNewPrice() + yingpan.getNewPrice());
+        session.setAttribute("cpu", cpuList.get(0));
+        session.setAttribute("zhuban", zhubanList.get(0));
+        session.setAttribute("xianka", xiankaList.get(0));
+        session.setAttribute("neicun", neicunList.get(0));
+        session.setAttribute("yingpan", yingpan);
+        session.setAttribute("dianyuan", dianyuanList.get(0));
+        session.setAttribute("totalPrice", cpuList.get(0).getNewPrice() + zhubanList.get(0).getNewPrice() + xiankaList.get(0).getNewPrice() + neicunList.get(0).getNewPrice() + dianyuanList.get(0).getDetails().getProduct().getNewPrice() + yingpan.getNewPrice());
         /*hashmap.put("xianka", xiankaList);
         hashmap.put("cpu", cpuList);
         hashmap.put("zhuban", zhubanList);
@@ -230,14 +247,15 @@ public class ProductController {
     }
 
 
-    @ResponseBody
     @RequestMapping("selectByPerformance")
-    public Map selectByPerformance(double performance, Integer demand) {
+    public String selectByPerformance(double performance, Integer demand, ModelMap modelMap, HttpSession session) {
         Map map = new HashMap();
         double a = 0.0;
         double b = 0.0;
-        double xiankaP = 0;
-        double cpuP = 0;
+        double xiankaPX = 0;
+        double xiankaPN = 0;
+        double cpuPX = 0;
+        double cpuPN = 0;
         //内存最高价
         double neicunMoney = performance * 60;
         if (neicunMoney < 300) {
@@ -250,26 +268,27 @@ public class ProductController {
             a = 0.38;
             b = 0.62;
         } else if (demand == 3) {
-            a = 0.59;
-            b = 0.41;
+            a = 0.58;
+            b = 0.42;
         } else if (demand == 4) {
             a = 0.67;
             b = 0.33;
         }
-        xiankaP = a * performance;
-        cpuP = b * performance;
+        //显卡和cpu上限与下限
+        xiankaPX = a * performance;
+        xiankaPN = (performance - 7) * a;
+        cpuPX = b * performance;
+        cpuPN = (performance - 7) * b;
         Product xianka = new Product();
         Category xiankaC = new Category();
         xiankaC.setCategoryName("显卡");
         xianka.setCategory(xiankaC);
-        xianka.setPerformance(xiankaP);
-        List<Product> xiankaList = productService.selectByCondition(xianka);
+        List<Product> xiankaList = productService.selectByCondition(xianka, xiankaPX, xiankaPN);
         Product cpu = new Product();
         Category cpuC = new Category();
         cpuC.setCategoryName("cpu");
         cpu.setCategory(cpuC);
-        cpu.setPerformance(cpuP);
-        List<Product> cpuList = productService.selectByCondition(cpu);
+        List<Product> cpuList = productService.selectByCondition(cpu, cpuPX, cpuPN);
         List<Product> zhubanList = new ArrayList<>();
         //方案集合
         List<Map> computerList = new ArrayList<>();
@@ -309,6 +328,7 @@ public class ProductController {
             //方案中存储一个显卡(每次存的都不一样)
             double xiankaPrice = 0;
             Parameter xiankapower = null;
+            computer.put("xianka", null);
             if (xiankaList.size() != 0) {
                 computer.put("xianka", xiankaList.get(0));
                 xiankaPrice = xiankaList.get(0).getNewPrice();
@@ -326,8 +346,14 @@ public class ProductController {
             computer.put("neicun", neicunList.get(0));
             double neicunPrice = neicunList.get(0).getNewPrice();
             //获取硬盘，和其价格
-            double yingpanPrice = 300;
+            Product yingpan = new Product();
+            yingpan.setProductName("256GB固态硬盘");
+            yingpan.setOldPrice(320.0);
+            double yingpanPrice = 300.0;
+            yingpan.setNewPrice(yingpanPrice);
+            computer.put("yingpan", yingpan);
             //获取电源,和其价格
+
             Details dianyuan = new Details();
             dianyuan.setCategoryId(35);
             Parameter dianyuanP = new Parameter();
@@ -344,7 +370,139 @@ public class ProductController {
             computerList.add(computer);
         }
         map.put("computerList", computerList);
-        System.out.println(map);
-        return map;
+
+        Map fangan = computerList.get(0);
+        modelMap.addAttribute("cpu", fangan.get("cpu"));
+        modelMap.addAttribute("zhuban", fangan.get("zhuban"));
+        modelMap.addAttribute("xianka", fangan.get("xianka"));
+        modelMap.addAttribute("neicun", fangan.get("neicun"));
+        modelMap.addAttribute("yingpan", fangan.get("yingpan"));
+        modelMap.addAttribute("dianyuan", fangan.get("dianyuan"));
+        modelMap.addAttribute("totalPrice", fangan.get("totalPrice"));
+        session.setAttribute("cpu", fangan.get("cpu"));
+        session.setAttribute("zhuban", fangan.get("zhuban"));
+        session.setAttribute("xianka", fangan.get("xianka"));
+        session.setAttribute("neicun", fangan.get("neicun"));
+        session.setAttribute("yingpan", fangan.get("yingpan"));
+        session.setAttribute("dianyuan", fangan.get("dianyuan"));
+        session.setAttribute("totalPrice", fangan.get("totalPrice"));
+        return "commend2";
+    }
+
+    @RequestMapping("insert")
+    public String insert(ModelMap map, Product product) {
+        product.setAddTime(new Date());
+        if (product.getNewPrice() != null &&
+                product.getOldPrice() != null &&
+                product.getAddTime() != null &&
+                product.getMedia() != null &&
+                product.getMediaNum() != null &&
+                product.getPerformance() != null &&
+                product.getSales() != null
+        ) {
+            double recommend = Recommend.getRecommend(product.getNewPrice(), product.getOldPrice(), product.getPerformance(), product.getMedia(), product.getMediaNum(), product.getSales(), product.getAddTime());
+            product.setRecommend(recommend);
+        } else if (product.getSales() != null &&
+                product.getAddTime() != null &&
+                product.getOldPrice() != null &&
+                product.getNewPrice() != null) {
+            double recommend = Recommend.getRecommend(product.getNewPrice(), product.getOldPrice(), product.getSales(), product.getAddTime());
+            product.setRecommend(recommend);
+        } else {
+            map.addAttribute("warring", "无法获取推荐值，因为参数不全");
+        }
+        productService.insert(product);
+        return "insert";
+    }
+
+    //查找一个商品信息
+    @RequestMapping("selectOne")
+    public String selectOne(int productId, ModelMap map) {
+
+        Product product = productService.selectOne(productId);
+        map.addAttribute("product", product);
+        return "update";
+    }
+
+    //修改
+    @RequestMapping("update")
+    public String update(Product product, ModelMap map, String time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", java.util.Locale.US);
+        try {
+            Date s1 = sdf.parse(time);
+            product.setAddTime(s1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (product.getNewPrice() != null &&
+                product.getOldPrice() != null &&
+                product.getAddTime() != null &&
+                product.getMedia() != null &&
+                product.getMediaNum() != null &&
+                product.getPerformance() != null &&
+                product.getSales() != null
+        ) {
+
+            double recommend = Recommend.getRecommend(product.getNewPrice(), product.getOldPrice(), product.getPerformance(), product.getMedia(), product.getMediaNum(), product.getSales(), product.getAddTime());
+            product.setRecommend(recommend);
+        } else if (product.getSales() != null &&
+                product.getAddTime() != null &&
+                product.getOldPrice() != null &&
+                product.getNewPrice() != null) {
+            double recommend = Recommend.getRecommend(product.getNewPrice(), product.getOldPrice(), product.getSales(), product.getAddTime());
+            product.setRecommend(recommend);
+        } else {
+            map.addAttribute("warring", "修改失败,缺少参数");
+        }
+        productService.update(product);
+        return "update";
+    }
+
+    @RequestMapping("selectByCondition2")
+    public String selectByCondition2(Product product, ModelMap map) {
+        List<Product> list = productService.selectByCondition(product);
+        map.addAttribute("list", list);
+        return "liebiao2";
+    }
+
+    @RequestMapping("change")
+    public String change(HttpSession session, ModelMap modelMap, Integer categoryId, int productId) {
+        Product product = productService.selectOne(productId);
+        Double price = 0.0;
+        if (categoryId == 31) {
+            Product p = (Product) session.getAttribute("zhuban");
+            session.setAttribute("zhuban", product);
+            price = (Double) session.getAttribute("totalPrice");
+            price = price - p.getNewPrice() + product.getNewPrice();
+        } else if (categoryId == 32) {
+            Product p = (Product) session.getAttribute("xianka");
+            session.setAttribute("xianka", product);
+            price = (Double) session.getAttribute("totalPrice");
+            price = price - p.getNewPrice() + product.getNewPrice();
+        } else if (categoryId == 33) {
+            Product p = (Product) session.getAttribute("cpu");
+            session.setAttribute("cpu", product);
+            price = (Double) session.getAttribute("totalPrice");
+            price = price - p.getNewPrice() + product.getNewPrice();
+        } else if (categoryId == 34) {
+            Product p = (Product) session.getAttribute("neicun");
+            session.setAttribute("neicun", product);
+            price = (Double) session.getAttribute("totalPrice");
+            price = price - p.getNewPrice() + product.getNewPrice();
+        } else if (categoryId == 35) {
+            Product p = (Product) session.getAttribute("dianyuan");
+            session.setAttribute("dianyuan", product);
+            price = (Double) session.getAttribute("totalPrice");
+            price = price - p.getNewPrice() + product.getNewPrice();
+        }
+        session.setAttribute("totalPrice", price);
+        modelMap.addAttribute("cpu", session.getAttribute("cpu"));
+        modelMap.addAttribute("zhuban", session.getAttribute("zhuban"));
+        modelMap.addAttribute("xianka", session.getAttribute("xianka"));
+        modelMap.addAttribute("neicun", session.getAttribute("neicun"));
+        modelMap.addAttribute("yingpan", session.getAttribute("yingpan"));
+        modelMap.addAttribute("dianyuan", session.getAttribute("dianyuan"));
+        modelMap.addAttribute("totalPrice", session.getAttribute("totalPrice"));
+        return "commend2";
     }
 }

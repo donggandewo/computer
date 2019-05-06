@@ -12,6 +12,9 @@
         <result property="brands.brandsId" column="brands_id"/>
         <result property="details.detailsId" column="details_id"/>
         <result property="performance" column="performance"/>
+        <result property="media" column="media"/>
+        <result property="mediaNum" column="media_num"/>
+        <result property="sales" column="sales"/>
         <association property="category" javaType="com.zzh.entity.Category">
             <result property="categoryId" column="cid"/>
             <result property="categoryName" column="cname"/>
@@ -27,14 +30,17 @@
         LEFT JOIN category t2
         on t1.category_id = t2.category_id
         where 1=1
-        <if test="category!=null">
-            and t2.category_name = #{category.categoryName}
+        <if test="product.category!=null">
+            and t2.category_name = #{product.category.categoryName}
         </if>
-        <if test="performance!=null">
-            and t1.performance &lt; #{performance}
+        <if test="product.performance!=null">
+            and t1.performance &lt; #{product.performance}
         </if>
-        <if test="newPrice!=null">
-            and t1.new_price &lt;#{newPrice}
+        <if test="product.newPrice!=null">
+            and t1.new_price &lt;#{product.newPrice}
+        </if>
+        <if test="max!=null">
+            and t1.performance &lt; #{max} and t1.performance >#{min}
         </if>
         order by t1.recommend desc
     </select>

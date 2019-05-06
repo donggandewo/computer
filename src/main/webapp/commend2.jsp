@@ -33,40 +33,50 @@
             <div>${requestScope.cpu.productName}</div>
             <div>${requestScope.cpu.newPrice}</div>
             <div class="username">C&nbsp;&nbsp;&nbsp;&nbsp;P&nbsp;&nbsp;&nbsp;&nbsp;U:&nbsp;&nbsp;&nbsp;<a
-                    href="${pageContext.request.contextPath}/product/selectByCondition?category.categoryName=cpu">
-                <input class="shurukuang" name="username" value="前往选择" type="button"/></a><span>请选择CPU</span>
+                    href="${pageContext.request.contextPath}/product/selectByCondition2?category.categoryName=cpu">
+                <input class="shurukuang" name="username" value="前往选择" type="button"/></a><span>切换CPU</span>
             </div>
             <div>${requestScope.zhuban.productName}</div>
             <div>${requestScope.zhuban.newPrice}</div>
             <div class="username">主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;板:&nbsp;&nbsp;<a
-                    href="${pageContext.request.contextPath}/product/selectByCondition?category.categoryName=主板"><input
-                    class="shurukuang" name="password" value="前往选择" type="button"/></a><span>请选择主板</span>
+                    href="${pageContext.request.contextPath}/product/selectByCondition2?category.categoryName=主板"><input
+                    class="shurukuang" name="password" value="前往选择" type="button"/></a><span>切换主板</span>
             </div>
             <div>${requestScope.xianka.productName}</div>
             <div>${requestScope.xianka.newPrice}</div>
             <div class="username">显&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡:&nbsp;&nbsp;<a
-                    href="${pageContext.request.contextPath}/product/selectByCondition?category.categoryName=显卡"><input
+                    href="${pageContext.request.contextPath}/product/selectByCondition2?category.categoryName=显卡"><input
                     class="shurukuang" name="repassword" value="前往选择"
-                    type="button"/></a><span>请选择显卡</span></div>
+                    type="button"/></a><span>切换显卡</span></div>
             <div>${requestScope.neicun.productName}</div>
             <div>${requestScope.neicun.newPrice}</div>
-            <div class="username">内&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存:&nbsp;&nbsp;<input
+            <div class="username">内&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;存:&nbsp;&nbsp;
+                <a href="${pageContext.request.contextPath}/product/selectByCondition2?category.categoryName=内存">
+                    <input
+                            class="shurukuang" name="tel"
+                            value="前往选择"
+                            type="button"/></a><span>切换内存</span>
+            </div>
+            <div>${requestScope.yingpan.productName}</div>
+            <div>${requestScope.yingpan.newPrice}</div>
+            <div class="username">硬&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;盘:&nbsp;&nbsp;<a
+                    href="${pageContext.request.contextPath}/product/selectByCondition2?category.categoryName=硬盘"><input
                     class="shurukuang" name="tel"
-                    value="------" readonly
-                    type="button"/><span>需要先完成CPU或显卡或主板的选择</span>
+                    value="前往选择" readonly
+                    type="button"/></a><span>切换硬盘</span>
             </div>
             <div>${requestScope.dianyuan.productName}</div>
             <div>${requestScope.dianyuan.newPrice}</div>
-
-            <div class="username">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源:&nbsp;&nbsp;<input
+            <div class="username">电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源:&nbsp;&nbsp;<a
+                    href="${pageContext.request.contextPath}/product/selectByCondition2?category.categoryName=电源"><input
                     class="shurukuang" name="tel"
-                    value="------" readonly
-                    type="button"/><span>需要先完成CPU或显卡或主板的选择</span>
+                    value="前往选择"
+                    type="button"/></a><span>切换电源</span>
             </div>
-            <div class="username">机&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;箱:&nbsp;&nbsp;<input
+            <div class="username">总&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价:&nbsp;&nbsp;<input
                     class="shurukuang" name="tel"
-                    value="------" readonly
-                    type="button"/><span>需要先完成CPU或显卡或主板的选择</span>
+                    value="${requestScope.totalPrice}" readonly
+                    type="text"/>
             </div>
             <!--<div class="username">
                <div class="left fl">验&nbsp;&nbsp;证&nbsp;&nbsp;码:&nbsp;&nbsp;<input class="yanzhengma"
@@ -77,6 +87,7 @@
                 <div class="clear"></div>
             </div>-->
         </div>
+
         <div class="regist_submit">
             <input onclick="aaaa()" class="submit" name="submit" type="submit" value="立即购买">
         </div>

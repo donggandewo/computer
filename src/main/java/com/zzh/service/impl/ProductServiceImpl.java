@@ -25,12 +25,27 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> selectByCondition(Product product) {
-        return productDao.selectByCondition(product);
+        return productDao.selectByCondition(product, null, null);
+    }
+
+    @Override
+    public List<Product> selectByCondition(Product product, Double max, Double min) {
+        return productDao.selectByCondition(product, max, min);
     }
 
     @Override
     public Product selectOne(int productId) {
         Product product = productDao.selectProduct(productId);
         return product;
+    }
+
+    @Override
+    public void insert(Product product) {
+        productDao.insert(product);
+    }
+
+    @Override
+    public void update(Product product) {
+        productDao.updateByPrimaryKey(product);
     }
 }

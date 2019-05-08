@@ -103,9 +103,9 @@
                 <div class="pinpai"><a href="./xiangqing.html" target="_blank">${p.productName}</a></div>
                 <div class="youhui">${p.description}</div>
                 <div class="jiage">${p.newPrice}</div>
-                <div>
+                <div class="jiage">
                     <a href="${pageContext.request.contextPath}/product/change?categoryId=${p.category.categoryId}&productId=${p.productId}">
-                        <button>添加至推荐</button>
+                        <button class="jrgwc">添加至推荐</button>
                     </a>
                 </div>
             </div>

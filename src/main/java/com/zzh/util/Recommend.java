@@ -4,7 +4,9 @@ import java.util.Date;
 
 public class Recommend {
     //全部参数
-    public static double getRecommend(double newPrice, double oldPrice, double performance, double media, int mediaNum, int sales, Date addTime) {
+    public static double getRecommend(double newPrice, double oldPrice,
+                                      double performance, double media,
+                                      int mediaNum, int sales, Date addTime) {
 
         double sale = (double) sales / 10000;
         double newPrice2 = newPrice / 100;
@@ -18,7 +20,8 @@ public class Recommend {
     }
 
     //只需要折扣力度和销量
-    public static double getRecommend(double newPrice, double oldPrice, int sales, Date addTime) {
+    public static double getRecommend(double newPrice, double oldPrice,
+                                      int sales, Date addTime) {
         double sale = sales / 10000;
         int days = getDays(addTime);
         double recommend = sale / days * 12 + (1 - (newPrice / oldPrice)) * 10;
@@ -29,7 +32,7 @@ public class Recommend {
         Date date = new Date();
         int day = (int) ((date.getTime() - addTime.getTime()) / (1000 * 3600 * 24));
         //不满一天按照一天计算
-        if (day == 0) {
+        if (day < 1) {
             day = 1;
         }
         return day;

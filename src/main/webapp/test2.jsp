@@ -7,57 +7,47 @@
     <title>推荐页面</title>
 </head>
 <body>
+<c:forEach items="${requestScope.list}" var="list">
 <table>
-    <div>
-        <c:forEach items="${requestScope.productList}" var="p">
-            <div>${p.productName}</div>
-            <div>${p.newPrice}</div>
-        </c:forEach>
-        <a href="${pageContext.request.contextPath}/product/selectByCondition?category.categoryName=cpu">
-            <button>请选择cpu</button>
-        </a>
-    </div>
-    <br>
-    <div>
-        <a href="">
-            <button>请选择主板</button>
-        </a>
-    </div>
-    <br>
-    <div>
-        <a href="">
-            <button>请选择显卡</button>
-        </a>
-    </div>
-    <br>
-    <div>
-        <a href="">
-            <button>请选择内存</button>
-        </a>
-    </div>
-    <br>
-    <div>
-        <a href="">
-            <button>请选择硬盘</button>
-        </a>
-    </div>
-    <br>
-    <div>
-        <a href="">
-            <button>请选择散热器</button>
-        </a>
-    </div>
-    <br>
-    <div>
-        <button>请选择电源</button>
-    </div>
-    <br>
-    <div>
-        <a href="">
-            <button>请选择机箱</button>
-        </a>
-    </div>
-    <br>
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>价格</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>CPU:${list.cpu.productName}</td>
+        <td> ${list.cpu.newPrice}</td>
+    </tr>
+    <tr>
+        <td>主板:${list.zhuban.productName}</td>
+        <td>${list.zhuban.newPrice}</td>
+    </tr>
+    <tr>
+        <td>显卡:${list.xianka.productName}</td>
+        <td>${list.xianka.newPrice}</td>
+    </tr>
+    <tr>
+        <td>内存:${list.neicun.productName}</td>
+        <td>${list.neicun.newPrice}</td>
+    </tr>
+    <tr>
+        <td>硬盘:${list.yingpan.productName}</td>
+        <td>${list.yingpan.newPrice}</td>
+    </tr>
+    <tr>
+        <td>电源:${list.dianyuan.productName}</td>
+        <td>${list.dianyuan.newPrice}</td>
+    </tr>
+    <tr>
+        <td colspan="2">总价:${list.totalPrice}</td>
+    </tr>
+    </tbody>
 </table>
+    <a href="${pageContext.request.contextPath}/product/getComputer?totalPrice=${list.totalPrice}">
+        <button>选择这个方案</button>
+    </a> </br>
+</c:forEach>
 </body>
 </html>

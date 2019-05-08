@@ -103,9 +103,9 @@
                 <div class="pinpai"><a href="./xiangqing.html" target="_blank">${p.productName}</a></div>
                 <div class="youhui">${p.description}</div>
                 <div class="jiage">${p.newPrice}</div>
-                <div>
+                <div class="xiadan ml20 mt10">
                     <a href="${pageContext.request.contextPath}/product/selectOne?productId=${p.productId}">
-                        <button>修改</button>
+                        <button class="jrgwc">修改</button>
                     </a>
                 </div>
             </div>
@@ -115,12 +115,7 @@
 </div>
 
 
-<footer class="mt20 center">
-    <div class="mt20">我的商城|隐私政策|Select Region</div>
-    <div>©XXX.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-    <div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
 
-</footer>
 <!-- end danpin -->
 </body>
 </html>

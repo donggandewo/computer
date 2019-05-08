@@ -258,8 +258,9 @@ public class ProductController {
         double cpuPN = 0;
         //内存最高价
         double neicunMoney = performance * 60;
-        if (neicunMoney < 300) {
-            neicunMoney = 300;
+        //内存最低价
+        if (neicunMoney < 220) {
+            neicunMoney = 220;
         }
         if (demand == 1) {
             a = 0.25;
@@ -297,6 +298,7 @@ public class ProductController {
         if (count > 5) {
             count = 5;
         }
+        loop1:
         for (int i = 0; i < count; i++) {
             //定义功率初值
             int power = 200;
@@ -325,7 +327,7 @@ public class ProductController {
             //方案中存入荐值最高的主板，和其价格
             computer.put("zhuban", zhubanList.get(0));
             Double zhubanPrice = zhubanList.get(0).getNewPrice();
-            //方案中存储一个显卡(每次存的都不一样)
+            //方案中存储一个显卡
             double xiankaPrice = 0;
             Parameter xiankapower = null;
             computer.put("xianka", null);
@@ -334,6 +336,17 @@ public class ProductController {
                 xiankaPrice = xiankaList.get(0).getNewPrice();
                 xiankapower = setCondition(xiankaList.get(0), "功耗");
                 power += xiankapower.getParameterInt();
+            }
+            //如果没有显卡 需要判断CPU是否含有核显
+            else {
+                Parameter hexian = parameterService.selectDetails(cpuX.getDetails().getDetailsId(), "有无核显");
+                //如果没有作废方案,清空之前存储的数据
+                if (hexian.getParameterInt() == 0) {
+                    computer.clear();
+                    zhubanList.clear();
+                    xiankaList.clear();
+                    continue loop1;
+                }
             }
             //获取显卡的功耗和价格
             //获取内存和其价格
@@ -349,6 +362,7 @@ public class ProductController {
             Product yingpan = new Product();
             yingpan.setProductName("256GB固态硬盘");
             yingpan.setOldPrice(320.0);
+            yingpan.setProductId(17);
             double yingpanPrice = 300.0;
             yingpan.setNewPrice(yingpanPrice);
             computer.put("yingpan", yingpan);
@@ -369,9 +383,14 @@ public class ProductController {
             computer.put("totalPrice", total);
             computerList.add(computer);
         }
+
+
+        //所有推荐方案
         map.put("computerList", computerList);
 
+
         Map fangan = computerList.get(0);
+        modelMap.addAttribute("list", computerList);
         modelMap.addAttribute("cpu", fangan.get("cpu"));
         modelMap.addAttribute("zhuban", fangan.get("zhuban"));
         modelMap.addAttribute("xianka", fangan.get("xianka"));
@@ -386,7 +405,10 @@ public class ProductController {
         session.setAttribute("yingpan", fangan.get("yingpan"));
         session.setAttribute("dianyuan", fangan.get("dianyuan"));
         session.setAttribute("totalPrice", fangan.get("totalPrice"));
-        return "commend2";
+        session.setAttribute("computerList", computerList);
+        return "test2";
+        /*return "commend2";*/
+        /*return map;*/
     }
 
     @RequestMapping("insert")
@@ -455,12 +477,54 @@ public class ProductController {
             map.addAttribute("warring", "修改失败,缺少参数");
         }
         productService.update(product);
-        return "update";
+        return "product";
     }
 
     @RequestMapping("selectByCondition2")
     public String selectByCondition2(Product product, ModelMap map) {
-        List<Product> list = productService.selectByCondition(product);
+        //商品集合
+        List<Product> list = new ArrayList<>();
+        //商品的信息
+        Product p = productService.selectOne(product.getProductId());
+        Category category = p.getCategory();
+        //如果要切换的商品是主板
+        if (category.getCategoryId() == 31) {
+            //拿到主板的接口信息
+            Parameter parameter = parameterService.selectDetails(p.getDetails().getDetailsId(), "接口");
+            //拿到所有接口信息一致的商品
+            List<Parameter> parameters = parameterService.selectByVal(parameter, null, null);
+            for (Parameter parameter1 : parameters) {
+                //拿到所有接口信息一致的主板商品
+                if (parameter1.getDetails().getCategoryId() == 31) {
+                    //存入商品
+                    list.add(parameter1.getDetails().getProduct());
+                }
+            }
+        } else if (category.getCategoryId() == 33) {
+            Parameter parameter = parameterService.selectDetails(p.getDetails().getDetailsId(), "接口");
+            //拿到所有接口信息一致的商品
+            List<Parameter> parameters = parameterService.selectByVal(parameter, null, null);
+            for (Parameter parameter1 : parameters) {
+                //拿到所有接口信息一致的cpu商品
+                if (parameter1.getDetails().getCategoryId() == 33) {
+                    //存入商品
+                    list.add(parameter1.getDetails().getProduct());
+                }
+            }
+        } else if (category.getCategoryId() == 34) {
+            Parameter parameter = parameterService.selectDetails(p.getDetails().getDetailsId(), "内存频率");
+            //拿到所有内存频率信息一致的商品
+            List<Parameter> parameters = parameterService.selectByVal(parameter, null, null);
+            for (Parameter parameter1 : parameters) {
+                //拿到所有内存频率信息一致的cpu商品
+                if (parameter1.getDetails().getCategoryId() == 34) {
+                    //存入商品
+                    list.add(parameter1.getDetails().getProduct());
+                }
+            }
+        } else {
+            list = productService.selectByCondition(product);
+        }
         map.addAttribute("list", list);
         return "liebiao2";
     }
@@ -473,7 +537,9 @@ public class ProductController {
             Product p = (Product) session.getAttribute("zhuban");
             session.setAttribute("zhuban", product);
             price = (Double) session.getAttribute("totalPrice");
+
             price = price - p.getNewPrice() + product.getNewPrice();
+
         } else if (categoryId == 32) {
             Product p = (Product) session.getAttribute("xianka");
             session.setAttribute("xianka", product);
@@ -503,6 +569,26 @@ public class ProductController {
         modelMap.addAttribute("yingpan", session.getAttribute("yingpan"));
         modelMap.addAttribute("dianyuan", session.getAttribute("dianyuan"));
         modelMap.addAttribute("totalPrice", session.getAttribute("totalPrice"));
+        return "commend2";
+    }
+
+
+    @RequestMapping("getComputer")
+    public String getComputer(Double totalPrice, HttpSession session, ModelMap modelMap) {
+        List<Map> list = (List<Map>) session.getAttribute("computerList");
+        for (Map map : list) {
+            Double price = (Double) map.get("totalPrice");
+            if (totalPrice.equals(price)) {
+                modelMap.addAttribute("cpu", map.get("cpu"));
+                modelMap.addAttribute("zhuban", map.get("zhuban"));
+                modelMap.addAttribute("xianka", map.get("xianka"));
+                modelMap.addAttribute("neicun", map.get("neicun"));
+                modelMap.addAttribute("yingpan", map.get("yingpan"));
+                modelMap.addAttribute("dianyuan", map.get("dianyuan"));
+                modelMap.addAttribute("totalPrice", map.get("totalPrice"));
+                session.setAttribute("totalPrice", map.get("totalPrice"));
+            }
+        }
         return "commend2";
     }
 }

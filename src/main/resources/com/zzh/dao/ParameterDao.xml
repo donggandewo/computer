@@ -20,6 +20,7 @@
             <result property="product.media" column="media"/>
             <result property="product.mediaNum" column="media_num"/>
             <result property="product.sales" column="sales"/>
+            <result property="product.category.categoryId" column="cid"/>
         </association>
     </resultMap>
     <select id="selectDetails" resultMap="parameter">

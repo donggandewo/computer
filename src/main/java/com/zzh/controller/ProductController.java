@@ -257,7 +257,7 @@ public class ProductController {
         double cpuPX = 0;
         double cpuPN = 0;
         //内存最高价
-        double neicunMoney = performance * 60;
+        double neicunMoney = performance * 20;
         //内存最低价
         if (neicunMoney < 220) {
             neicunMoney = 220;
@@ -440,7 +440,6 @@ public class ProductController {
     //查找一个商品信息
     @RequestMapping("selectOne")
     public String selectOne(int productId, ModelMap map) {
-
         Product product = productService.selectOne(productId);
         map.addAttribute("product", product);
         return "update";
@@ -590,5 +589,12 @@ public class ProductController {
             }
         }
         return "commend2";
+    }
+
+    @RequestMapping("select")
+    public String select(int productId, ModelMap map) {
+        Product product = productService.selectOne(productId);
+        map.addAttribute("product", product);
+        return "xiangqing";
     }
 }

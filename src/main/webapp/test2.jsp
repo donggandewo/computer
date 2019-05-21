@@ -47,7 +47,7 @@
 </table>
     <a href="${pageContext.request.contextPath}/product/getComputer?totalPrice=${list.totalPrice}">
         <button>选择这个方案</button>
-    </a> </br>
+    </a></br>
 </c:forEach>
 </body>
 </html>

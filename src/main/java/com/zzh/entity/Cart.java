@@ -12,5 +12,4 @@ public class Cart {
     private LinkedHashMap<Integer, Product> map = new LinkedHashMap<>();
     private double price;
     private double price2; //原价
-
 }

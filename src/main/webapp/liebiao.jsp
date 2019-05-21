@@ -59,15 +59,15 @@
     </a>
     <div class="nav fl">
         <ul>
-            <li><a href="">手机</a></li>
-            <li><a href="">电脑配件</a></li>
-            <li><a href="">平板·笔记本</a></li>
-            <li><a href="">电视</a></li>
-            <li><a href="">盒子·影音</a></li>
-            <li><a href="">路由器</a></li>
-            <li><a href="">智能硬件</a></li>
-            <li><a href="">服务</a></li>
-            <li><a href="">社区</a></li>
+            <li><a href="">CPU</a></li>
+            <li><a href="">主板</a></li>
+            <li><a href="">显卡</a></li>
+            <li><a href="">内存</a></li>
+            <li><a href="">硬盘</a></li>
+            <li><a href="">固态硬盘</a></li>
+            <li><a href="">电源</a></li>
+            <li><a href="">机箱</a></li>
+            <li><a href="">其他</a></li>
         </ul>
     </div>
     <div class="search fr">
@@ -97,17 +97,14 @@
             <div class="mingxing fl mb20" onmousemove="this.style.border='2px solid red'"
                  onmouseout="this.style.border='2px solid #fff'"
                  style="border:2px solid #fff;width:230px;cursor:pointer;">
-                <div class="sub_mingxing"><a href="./xiangqing.html" target="_blank"><img alt=""
-                                                                                          src="${pageContext.request.contextPath}/image/liebiao_xiaomi6.jpg"></a>
+                <div class="sub_mingxing"><a
+                        href="${pageContext.request.contextPath}/product/select?productId=${p.productId}"
+                        target="_blank"><img alt=""
+                                             src="${pageContext.request.contextPath}/image/liebiao_xiaomi6.jpg"></a>
                 </div>
-                <div class="pinpai"><a href="./xiangqing.html" target="_blank">${p.productName}</a></div>
+                <div class="pinpai"><a href="" target="_blank">${p.productName}</a></div>
                 <div class="youhui">${p.description}</div>
-                <div class="jrgwc">${p.newPrice}</div>
-                <div class="jiage">
-                    <a href="${pageContext.request.contextPath}/product/selectByDetails?condition=接口&productId=${p.productId}">
-                        <button class="jrgwc">添加至推荐</button>
-                    </a>
-                </div>
+                <div class="jiage">${p.newPrice}</div>
             </div>
         </c:forEach>
         <div class="clear"></div>
@@ -115,12 +112,6 @@
 </div>
 
 
-<footer class="mt20 center">
-    <div class="mt20">我的商城|隐私政策|Select Region</div>
-    <div>©XXX.com 京ICP证110507号 京ICP备10046444号 京公网安备11010802020134号 京网文[2014]0059-0009号</div>
-    <div>违法和不良信息举报电话：185-0130-1238，本网站所列数据，除特殊说明，所有数据均出自我司实验室测试</div>
-
-</footer>
 <!-- end danpin -->
 </body>
 </html>

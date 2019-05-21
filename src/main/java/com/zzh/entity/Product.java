@@ -33,4 +33,6 @@ public class Product {
     private Double media;
     private Integer mediaNum;
     private Integer sales;
+    private Integer buyCount;
+    private int status = 0;
 }

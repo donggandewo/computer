@@ -34,13 +34,24 @@
         <div class="right fr">
             <div class="gouwuche fr"><a href="">购物车</a></div>
             <div class="fr">
-                <ul>
-                    <li><a href="./login.html" target="_blank">登录</a></li>
-                    <li>|</li>
-                    <li><a href="./register.html" target="_blank">注册</a></li>
-                    <li>|</li>
-                    <li><a href="">消息通知</a></li>
-                </ul>
+                <c:if test="${sessionScope.username==null}">
+                    <ul>
+                        <li><a href="${pageContext.request.contextPath}/login.jsp" target="_blank">登录</a></li>
+                        <li>|</li>
+                        <li><a href="${pageContext.request.contextPath}/register.jsp" target="_blank">注册</a></li>
+                        <li>|</li>
+                        <li><a href="">消息通知</a></li>
+                    </ul>
+                </c:if>
+                <c:if test="${sessionScope.username!=null}">
+                    <ul>
+                        <li>欢迎您，${sessionScope.username}</li>
+                        <li>|</li>
+                        <li><a href="#" target="_blank">注销</a></li>
+                        <li>|</li>
+                        <li><a href="">消息通知</a></li>
+                    </ul>
+                </c:if>
             </div>
             <div class="clear"></div>
         </div>

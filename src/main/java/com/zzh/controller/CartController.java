@@ -4,7 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.zzh.entity.Cart;
 import com.zzh.entity.Product;
 import com.zzh.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpSession;
@@ -12,12 +16,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+@Controller
+@RequestMapping("cart")
 public class CartController {
+    @Autowired
     private ProductService productService;
 
     private Jedis jedis = new Jedis("localhost");
 
-    public void addTo(HttpSession session, Integer productId) {
+    @RequestMapping("addTo")
+    public ModelAndView addTo(HttpSession session, Integer productId) {
+
         Integer userId = (Integer) session.getAttribute("userId");
         Cart cart = JSONObject.parseObject(jedis.get(userId.toString()), Cart.class);
         if (cart == null) {
@@ -36,8 +45,11 @@ public class CartController {
         }
         cart.setMap(map);
         jedis.set(userId.toString(), JSONObject.toJSONString(cart));
+        ModelAndView mv = new ModelAndView("redirect:/product/select?productId=" + productId);
+        return mv;
     }
 
+    @RequestMapping("cartPrice")
     public String cartPrice(HttpSession session, ModelMap modelMap) {
         Cart cart;
         Integer userId = (int) session.getAttribute("userId");

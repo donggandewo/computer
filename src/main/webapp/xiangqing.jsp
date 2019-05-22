@@ -91,7 +91,7 @@
 
 
 <!-- xiangqing -->
-<form action="post" method="">
+
     <div class="xiangqing">
         <div class="neirong w">
             <div class="xiaomi6 fl">${requestScope.product.productName}</div>
@@ -148,14 +148,17 @@
                 </div>
                 <div class="bot mt20 ft20 ftbc">总计：${requestScope.product.newPrice}元</div>
             </div>
+
             <div class="xiadan ml20 mt20">
                 <input class="jrgwc" name="jrgwc" type="button" value="立即选购"/>
-                <input class="jrgwc" name="jrgwc" type="button" value="加入购物车"/>
+                <a href="${pageContext.request.contextPath}/cart/addTo?productId=${requestScope.product.productId}">
+                    <button class="jrgwc">加入购物车</button>
+                </a>
             </div>
         </div>
         <div class="clear"></div>
     </div>
-</form>
+
 <!-- footer -->
 <footer class="mt20 center">
 

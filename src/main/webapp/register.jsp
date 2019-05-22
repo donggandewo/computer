@@ -1,20 +1,24 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>用户注册</title>
-    <link href="./css/login.css" rel="stylesheet" type="text/css">
+    <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet" type="text/css">
 
 </head>
 <body>
-    <div class="regist">
-        <div class="regist_center">
-            <div class="regist_top">
-                <div class="left fl">用户注册</div>
-                <div class="right fr"><a href="./index.html" target="_self">商城</a></div>
-                <div class="clear"></div>
-                <div class="xian center"></div>
-            </div>
+<div class="regist">
+    <div class="regist_center">
+        <div class="regist_top">
+            <div class="left fl">用户注册</div>
+            <div class="right fr"><a href="./index.html" target="_self">商城</a></div>
+            <div class="clear"></div>
+            <div class="xian center"></div>
+        </div>
+
+        <form action="${pageContext.request.contextPath}/user/regist">
             <div class="regist_main center">
                 <div class="username">用&nbsp;&nbsp;户&nbsp;&nbsp;名:&nbsp;&nbsp;<input
                         class="shurukuang" name="username"
@@ -38,6 +42,7 @@
                         type="text"
                         value=""/><span>请填写您的电话（选填）</span>
                 </div>
+
                 <!--<div class="username">
                    <div class="left fl">验&nbsp;&nbsp;证&nbsp;&nbsp;码:&nbsp;&nbsp;<input class="yanzhengma"
                                                                                         name="username"
@@ -50,8 +55,9 @@
             <div class="regist_submit">
                 <input class="submit" name="submit" type="submit" value="立即注册">
             </div>
-
-        </div>
+        </form>
     </div>
+
+</div>
 </body>
 </html>
